@@ -2,7 +2,7 @@
 '''inv matter for auto pub. 101.camp
 '''
 
-__version__ = 'pub101CAMP v.190521.2042'
+__version__ = 'pub101CAMP v.190721.2342'
 __author__ = 'Zoom.Quiet'
 __license__ = 'MIT@2019-04'
 
@@ -59,7 +59,7 @@ from invoke import task
 #from fabric.context_managers import cd
 from textwrap import dedent as dedentxt
 
-CAMPROOT = os.environ.get("CAMPSITES_ROOT")
+CAMPROOT = ''#os.environ.get("CAMPSITES_ROOT")
 CSITES = {'101':{'gl':'gl_101.camp'
                 , 'ghp':'zq_gh101camp'
                 , 'log':'dlog_gh_101camp'
@@ -102,7 +102,7 @@ def sync4media(c):
     c.run('pwd')
 
 
-@task 
+#@task 
 def pl(c, site):
     '''$ inv pl [101|py] <- pull all relation repo.
     '''
@@ -133,7 +133,7 @@ def bu(c):
     c.run('pwd')
     c.run('mkdocs build', hide=False, warn=True)
 
-#@task 
+@task 
 def pu(c):
     '''push gl manuscript...
     '''
@@ -153,7 +153,7 @@ def pu(c):
 
 
 #@task 
-def gh(c, site):
+def ghp(c, site):
     '''$ inv gh [101|py] <- push gh-pages for site publish
     '''
     global CAMPROOT
@@ -180,7 +180,7 @@ def gh(c, site):
                     , hide=False, warn=True)
     #c.run('git pu', hide=False, warn=True)
 
-@task
+#@task
 def chktri(c):
     '''check trigger obj. set TRIGGER switch
     '''
@@ -219,18 +219,60 @@ def recover(c):
 
 
 @task 
+def gh(c):
+    '''push gh-pages for site publish
+    '''
+    #global CAMPROOT
+    #global CSITES
+    #print(CAMPROOT)
+    
+    ccname(c)
+    sync4media(c)
+    
+    _ts = '{}.{}'.format(time.strftime('%y%m%d %H%M %S')
+                     , str(time.time()).split('.')[1][:3] )
+    
+    #_aim = '%s/%s'%(CAMPROOT, CSITES[site]['ghp'])
+    cd(c, AIM)
+    #os.chdir(AIM)
+    #with cd('site/'):
+    #c.run('pwd')
+    c.run('ls')
+    c.run('git st', hide=False, warn=True)
+    #c.run('git add .', hide=False, warn=True)
+    #c.run('git ci -am '
+    c.run('git imp '
+          '"pub(site) gen. by MkDocs as invoke (at %s)"'% _ts
+                    , hide=False, warn=True)
+    #c.run('git pu', hide=False, warn=True)
+
+
+@task 
 def pub(c, site):
     '''$ inv pub [101|py] <- auto deploy new site version base multi-repo.
     '''
-    global TRIGGER
-    global CAMPROOT
-    global CSITES
-    print(CAMPROOT)
-    pl(c, site)
-    _crt = '%s/%s'%(CAMPROOT, CSITES[site]['gl'])
-    cd(c, _crt)
-    chktri(c)
+    #global TRIGGER
+    #global CAMPROOT
+    #global CSITES
+    #print(CAMPROOT)
+    #pl(c, site)
+    #_crt = '%s/%s'%(CAMPROOT, CSITES[site]['gl'])
+    #cd(c, _crt)
+    #chktri(c)
     
+    print('auto deplo NOW:')
+    #return None
+    bu(c)
+    #recover(c)
+
+    pu(c)
+    #ccname(c)
+    #sync4media(c)
+    gh(c)
+    ver(c)
+    
+    return None
+
     if TRIGGER:
         print('auto deplo NOW:')
         #return None
@@ -246,7 +288,5 @@ def pub(c, site):
     else:
         print('nothing need deploy')
     
-    return None
-
 
 
