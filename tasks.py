@@ -133,7 +133,7 @@ def bu(c):
     c.run('pwd')
     c.run('mkdocs build', hide=False, warn=True)
 
-@task 
+task 
 def pu(c):
     '''push gl manuscript...
     '''
@@ -218,7 +218,7 @@ def recover(c):
     print('TRIGGER obj. recover -> waiting human deploy again')
 
 
-@task 
+task 
 def gh(c):
     '''push gh-pages for site publish
     '''
@@ -247,9 +247,10 @@ def gh(c):
     #c.run('git pu', hide=False, warn=True)
 
 
+#def pub(c, site):
 @task 
-def pub(c, site):
-    '''$ inv pub [101|py] <- auto deploy new site version base multi-repo.
+def pub(c):
+    '''<- auto deploy new site version base multi-repo.
     '''
     #global TRIGGER
     #global CAMPROOT
