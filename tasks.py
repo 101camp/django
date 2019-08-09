@@ -218,7 +218,7 @@ def recover(c):
     print('TRIGGER obj. recover -> waiting human deploy again')
 
 
-task 
+#@task 
 def gh(c):
     '''push gh-pages for site publish
     '''
